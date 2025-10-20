@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ data.name }} for {{ data.job }} at {{ data.company }} | FunnelCV Chat</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    .chat-container {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      scroll-behavior: smooth;
+    }
+
+    .chat-section {
+      scroll-snap-align: start;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      word-wrap: break-word;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .chat-bubble.recruiter {
+      background: #ffffff;
+      border-radius: 18px 18px 4px 18px;
+      margin-left: auto;
+      margin-right: 1rem;
+    }
+
+    .chat-bubble.candidate {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      border-radius: 18px 18px 18px 4px;
+      margin-left: 1rem;
+      margin-right: auto;
+    }
+
+    .response-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+
+    .response-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid transparent;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .response-btn:hover {
+      background: white;
+      border-color: #4f46e5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .response-btn.selected {
+      background: #4f46e5;
+      color: white;
+      border-color: #4f46e5;
+    }
+
+    .section-header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: center;
+      color: white;
+    }
+
+    .progress-indicator {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 100;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d1d5db;
+      transition: all 0.3s ease;
+    }
+
+    .progress-dot.active {
+      background: #4f46e5;
+      transform: scale(1.5);
+    }
+
+    .progress-dot.completed {
+      background: #10b981;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .floating-action {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .floating-action:hover {
+      transform: translateX(-50%) translateY(-4px);
+      box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5);
+    }
+
+    .video-embed {
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1rem 0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="chat-container">
+  <!-- Progress Indicator -->
+  <div class="progress-indicator">
+    <span class="text-sm font-medium text-gray-700">Progress:</span>
+    <div class="progress-dot active" data-section="0"></div>
+    <div class="progress-dot" data-section="1"></div>
+    <div class="progress-dot" data-section="2"></div>
+    <div class="progress-dot" data-section="3"></div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Chat Header -->
+    <div class="section-header">
+      <h1 class="text-2xl font-bold">{{ data.name }}</h1>
+      <p class="text-white opacity-90">Applying for {{ data.job }} at {{ data.company }}</p>
+    </div>
+
+    <!-- Chat Flow Container -->
+    <div id="chatFlow" class="space-y-6">
+
+      <!-- Section 1: Introduction -->
+      <div class="chat-section" data-section="0">
+        <div class="chat-bubble candidate p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-user text-white"></i>
+            </div>
+            <div>
+              <p class="font-medium">Hi! I'm {{ data.name }}</p>
+              <p class="mt-2">I'm excited about the {{ data.job }} position at {{ data.company }}. Let me tell you about myself!</p>
+              <div class="mt-3 text-sm opacity-90">
+                <p><i class="fas fa-envelope mr-2"></i>hello@sandorkardos.com</p>
+                <p><i class="fas fa-globe mr-2"></i>sandorkardos.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="response-options">
+          <button class="response-btn" onclick="selectResponse(0, 'Tell me more about your background')">
+            📋 Tell me more about your background
+          </button>
+          <button class="response-btn" onclick="selectResponse(0, 'What specific skills do you bring?')">
+            💼 What specific skills do you bring?
+          </button>
+          <button class="response-btn" onclick="selectResponse(0, 'Why are you interested in our company?')">
+            🏢 Why are you interested in our company?
+          </button>
+        </div>
+      </div>
+
+      <!-- Section 2: Professional Summary -->
+      <div class="chat-section hidden" data-section="1">
+        <div class="chat-bubble recruiter p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-briefcase text-white"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-800">Recruiter</p>
+              <p class="mt-2 text-gray-700" id="recruiterQuestion">Tell me more about your background</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-bubble candidate p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-user text-white"></i>
+            </div>
+            <div>
+              <p class="font-medium">{{ data.name }}</p>
+              <div class="mt-2 prose prose-sm max-w-none text-white">
+                {{ data.summary|safe }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="response-options">
+          <button class="response-btn" onclick="selectResponse(1, 'Impressive! What are your key skills?')">
+            👍 Impressive! What are your key skills?
+          </button>
+          <button class="response-btn" onclick="selectResponse(1, 'Can you elaborate on specific achievements?')">
+            🎯 Can you elaborate on achievements?
+          </button>
+          <button class="response-btn" onclick="selectResponse(1, 'How does this relate to our role?')">
+            🔗 How does this relate to our role?
+          </button>
+        </div>
+      </div>
+
+      <!-- Section 3: Skills & Expertise -->
+      <div class="chat-section hidden" data-section="2">
+        <div class="chat-bubble recruiter p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-briefcase text-white"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-800">Recruiter</p>
+              <p class="mt-2 text-gray-700" id="recruiterQuestion2">What are your key skills?</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-bubble candidate p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-star text-white"></i>
+            </div>
+            <div>
+              <p class="font-medium">{{ data.name }}</p>
+              <p class="mt-2">Here are my core competencies:</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                {% if data.skills %}
+                  {% for skill in data.skills.split(',') %}
+                    <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-sm">{{ skill.strip() }}</span>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if data.video %}
+        <div class="chat-bubble candidate p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-video text-white"></i>
+            </div>
+            <div class="w-full">
+              <p class="font-medium">{{ data.name }}</p>
+              <p class="mt-2 mb-3">I've also prepared a quick video introduction for you:</p>
+              <div class="video-embed relative" style="padding-bottom: 56.25%;">
+                <iframe 
+                  src="{{ data.video }}" 
+                  class="absolute top-0 left-0 w-full h-full border-0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen
+                  title="Video introduction from {{ data.name }}"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="response-options">
+          <button class="response-btn" onclick="selectResponse(2, 'Great fit! Let me provide feedback')">
+            ✅ Great fit! Let me provide feedback
+          </button>
+          <button class="response-btn" onclick="selectResponse(2, 'I have some questions about experience')">
+            ❓ I have some questions
+          </button>
+          <button class="response-btn" onclick="selectResponse(2, 'Thanks, I will be in touch')">
+            📞 Thanks, I will be in touch
+          </button>
+        </div>
+      </div>
+
+      <!-- Section 4: Feedback & Next Steps -->
+      <div class="chat-section hidden" data-section="3">
+        <div class="chat-bubble recruiter p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-briefcase text-white"></i>
+            </div>
+            <div>
+              <p class="font-medium text-gray-800">Recruiter</p>
+              <p class="mt-2 text-gray-700" id="recruiterQuestion3">Great fit! Let me provide feedback</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-bubble candidate p-4">
+          <div class="flex items-start space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+              <i class="fas fa-heart text-white"></i>
+            </div>
+            <div>
+              <p class="font-medium">{{ data.name }}</p>
+              <p class="mt-2">Thank you for taking the time to review my application! I'd love to hear your feedback and discuss how I can contribute to {{ data.company }}.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Feedback Options -->
+        <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg p-6 mt-4">
+          <h3 class="text-white font-semibold mb-4 text-center">📝 Provide Detailed Feedback</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button class="response-btn text-left p-4 h-auto" onclick="provideFeedback('interested')">
+              <div class="flex items-center mb-2">
+                <span class="text-2xl mr-2">👍</span>
+                <span class="font-semibold">Interested</span>
+              </div>
+              <p class="text-sm opacity-75">Strong candidate - Ready for interview</p>
+            </button>
+
+            <button class="response-btn text-left p-4 h-auto" onclick="provideFeedback('maybe')">
+              <div class="flex items-center mb-2">
+                <span class="text-2xl mr-2">🤔</span>
+                <span class="font-semibold">Maybe</span>
+              </div>
+              <p class="text-sm opacity-75">Good potential but need more info</p>
+            </button>
+
+            <button class="response-btn text-left p-4 h-auto" onclick="provideFeedback('not-match')">
+              <div class="flex items-center mb-2">
+                <span class="text-2xl mr-2">❌</span>
+                <span class="font-semibold">Not a match</span>
+              </div>
+              <p class="text-sm opacity-75">Skills don't align with requirements</p>
+            </button>
+
+            <button class="response-btn text-left p-4 h-auto" onclick="provideFeedback('improve')">
+              <div class="flex items-center mb-2">
+                <span class="text-2xl mr-2">💡</span>
+                <span class="font-semibold">Has potential</span>
+              </div>
+              <p class="text-sm opacity-75">Needs improvement in some areas</p>
+            </button>
+          </div>
+
+          <div class="mt-6 text-center">
+            <button class="response-btn bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 px-6 py-3" onclick="showDetailedRating()">
+              <i class="fas fa-star mr-2"></i>
+              Rate Specific Sections (1-5)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action" id="floatingAction">
+      <i class="fas fa-download mr-2"></i>
+      <a href="{{ url_for('download_cv', slug=slug) }}" class="text-white no-underline">
+        Download CV
+      </a>
+    </div>
+  </div>
+
+  <!-- Success Notification -->
+  <div id="feedbackNotification" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transition-all duration-300 z-50">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span>Feedback submitted successfully!</span>
+  </div>
+
+  <script>
+    let currentSection = 0;
+    let startTime = Date.now();
+    let sectionTimes = {};
+
+    function selectResponse(sectionId, response) {
+      // Track response selection
+      trackEvent('response_selected', {
+        section: sectionId,
+        response: response,
+        time_in_section: Date.now() - startTime
+      });
+
+      // Update recruiter question
+      if (sectionId === 0) {
+        document.getElementById('recruiterQuestion').textContent = response;
+      } else if (sectionId === 1) {
+        document.getElementById('recruiterQuestion2').textContent = response;
+      } else if (sectionId === 2) {
+        document.getElementById('recruiterQuestion3').textContent = response;
+      }
+
+      // Show next section
+      moveToSection(sectionId + 1);
+
+      // Mark response as selected
+      event.target.classList.add('selected');
+
+      // Disable other buttons in the same section
+      const siblings = event.target.parentElement.children;
+      for (let sibling of siblings) {
+        if (sibling !== event.target) {
+          sibling.style.opacity = '0.5';
+          sibling.style.pointerEvents = 'none';
+        }
+      }
+    }
+
+    function moveToSection(sectionId) {
+      if (sectionId > 3) return;
+
+      // Hide current section's response options
+      const currentSectionEl = document.querySelector(`[data-section="${currentSection}"]`);
+      if (currentSectionEl) {
+        const responseOptions = currentSectionEl.querySelector('.response-options');
+        if (responseOptions) {
+          responseOptions.style.opacity = '0.7';
+        }
+      }
+
+      // Show next section
+      const nextSection = document.querySelector(`[data-section="${sectionId}"]`);
+      if (nextSection) {
+        nextSection.classList.remove('hidden');
+        nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // Update progress
+      updateProgress(sectionId);
+      currentSection = sectionId;
+      startTime = Date.now();
+
+      // Show floating action on final section
+      if (sectionId === 3) {
+        setTimeout(() => {
+          document.getElementById('floatingAction').style.display = 'block';
+        }, 2000);
+      }
+    }
+
+    function navigateToSection(sectionIndex) {
+      if (sectionIndex < 0 || sectionIndex > 3) return;
+
+      const targetSection = document.querySelector(`[data-section="${sectionIndex}"]`);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        updateProgress(sectionIndex);
+        currentSection = sectionIndex;
+      }
+    }
+
+    // Add keyboard navigation
+    document.addEventListener('keydown', function(event) {
+      if (event.ctrlKey || event.metaKey) return;
+
+      switch(event.key) {
+        case 'ArrowDown':
+        case 'PageDown':
+        case ' ':
+          event.preventDefault();
+          navigateToSection(currentSection + 1);
+          break;
+        case 'ArrowUp':
+        case 'PageUp':
+          event.preventDefault();
+          navigateToSection(currentSection - 1);
+          break;
+        case 'Home':
+          event.preventDefault();
+          navigateToSection(0);
+          break;
+        case 'End':
+          event.preventDefault();
+          navigateToSection(3);
+          break;
+      }
+    });
+
+    // Add click navigation to progress dots
+    document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+      dot.addEventListener('click', function() {
+        navigateToSection(index);
+      });
+      dot.style.cursor = 'pointer';
+    });
+
+    function updateProgress(sectionId) {
+      const dots = document.querySelectorAll('.progress-dot');
+      dots.forEach((dot, index) => {
+        if (index < sectionId) {
+          dot.classList.add('completed');
+          dot.classList.remove('active');
+        } else if (index === sectionId) {
+          dot.classList.add('active');
+          dot.classList.remove('completed');
+        } else {
+          dot.classList.remove('active', 'completed');
+        }
+      });
+    }
+
+    function provideFeedback(type) {
+      const feedbackData = {
+        feedback_type: type,
+        time_spent: Date.now() - startTime,
+        section_times: sectionTimes,
+        cv_slug: '{{ slug }}',
+        timestamp: new Date().toISOString()
+      };
+
+      // Send feedback to backend
+      fetch('/feedback/{{ slug }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(feedbackData)
+      }).then(() => {
+        showNotification();
+
+        // Show thank you message
+        setTimeout(() => {
+          const thankYouBubble = document.createElement('div');
+          thankYouBubble.className = 'chat-bubble candidate p-4 mt-4';
+          thankYouBubble.innerHTML = `
+            <div class="flex items-start space-x-3">
+              <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                <i class="fas fa-heart text-white"></i>
+              </div>
+              <div>
+                <p class="font-medium">{{ data.name }}</p>
+                <p class="mt-2">Thank you for the feedback! This helps me improve my future applications. 🙏</p>
+              </div>
+            </div>
+          `;
+          document.getElementById('chatFlow').appendChild(thankYouBubble);
+          thankYouBubble.scrollIntoView({ behavior: 'smooth' });
+        }, 1000);
+      });
+    }
+
+    function showDetailedRating() {
+      // Implementation for detailed rating system
+      const ratingInterface = document.createElement('div');
+      ratingInterface.className = 'bg-white bg-opacity-95 rounded-lg p-6 mt-4';
+      ratingInterface.innerHTML = `
+        <h4 class="font-semibold mb-4 text-gray-800">Rate CV Sections (1-5 stars)</h4>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-700">Skills Match:</span>
+            <div class="rating" data-section="skills">${generateStars()}</div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-700">Experience:</span>
+            <div class="rating" data-section="experience">${generateStars()}</div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-700">Presentation:</span>
+            <div class="rating" data-section="presentation">${generateStars()}</div>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-700">Overall Fit:</span>
+            <div class="rating" data-section="fit">${generateStars()}</div>
+          </div>
+          <button class="w-full bg-blue-500 text-black py-2 px-4 rounded mt-4" onclick="submitDetailedRating()">
+            Submit Ratings
+          </button>
+        </div>
+      `;
+
+      document.getElementById('chatFlow').appendChild(ratingInterface);
+      ratingInterface.scrollIntoView({ behavior: 'smooth' });
+
+      // Setup star rating functionality
+      setTimeout(() => setupStarRatings(), 100);
+    }
+
+    function generateStars() {
+      return '★★★★★'.split('').map((star, index) => 
+        `<span class="star cursor-pointer text-gray-300 hover:text-yellow-400" data-rating="${index + 1}">★</span>`
+      ).join('');
+    }
+
+    function setupStarRatings() {
+      document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.dataset.rating);
+          const ratingContainer = this.parentElement;
+          const stars = ratingContainer.querySelectorAll('.star');
+
+          stars.forEach((s, index) => {
+            s.style.color = index < rating ? '#fbbf24' : '#d1d5db';
+          });
+
+          ratingContainer.dataset.selectedRating = rating;
+        });
+      });
+    }
+
+    function submitDetailedRating() {
+      const ratings = {};
+      document.querySelectorAll('.rating').forEach(rating => {
+        const section = rating.dataset.section;
+        const selectedRating = rating.dataset.selectedRating;
+        if (selectedRating) {
+          ratings[section] = parseInt(selectedRating);
+        }
+      });
+
+      const feedbackData = {
+        feedback_type: 'detailed_rating',
+        detailed_ratings: ratings,
+        time_spent: Date.now() - startTime,
+        cv_slug: '{{ slug }}',
+        timestamp: new Date().toISOString()
+      };
+
+      fetch('/feedback/{{ slug }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(feedbackData)
+      }).then(() => {
+        showNotification();
+      });
+    }
+
+    function showNotification() {
+      const notification = document.getElementById('feedbackNotification');
+      notification.style.opacity = '1';
+      notification.style.transform = 'translateX(-50%) translateY(0)';
+
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(-50%) translateY(-20px)';
+      }, 3000);
+    }
+
+    function trackEvent(event, data) {
+      fetch('/analytics/{{ slug }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: event,
+          data: data,
+          timestamp: new Date().toISOString()
+        })
+      });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      trackEvent('chat_funnel_opened', { timestamp: Date.now() });
+    });
+  </script>
+</body>
+</html>

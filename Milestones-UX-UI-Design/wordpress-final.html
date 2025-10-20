@@ -1,0 +1,750 @@
+<div class="wp-timeline-embed">
+    <style>
+        .wp-timeline-embed * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wp-timeline-embed {
+            width: 100%;
+            margin: 20px 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                sans-serif;
+            background: transparent;
+            color: #111;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed {
+                color: #fff;
+            }
+        }
+
+        .wp-timeline-embed .timeline-wrapper {
+            position: relative;
+            overflow: hidden;
+            padding: 40px 0;
+            height: 600px;
+            touch-action: pan-x;
+            cursor: grab;
+        }
+
+        .wp-timeline-embed .timeline-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                #d8ff88 10%,
+                #d8ff88 90%,
+                transparent 100%
+            );
+            z-index: 1;
+        }
+
+        .wp-timeline-embed .timeline {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            transition: transform 0.3s ease;
+            will-change: transform;
+            position: relative;
+            z-index: 2;
+        }
+
+        .wp-timeline-embed .timeline-item {
+            position: relative;
+            margin: 0 100px;
+            min-width: 120px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition:
+                opacity 0.6s ease,
+                transform 0.6s ease;
+        }
+
+        .wp-timeline-embed .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .wp-timeline-embed .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: #d8ff88;
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 4px rgba(216, 255, 136, 0.3);
+        }
+
+        .wp-timeline-embed .timeline-dot:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 8px rgba(216, 255, 136, 0.4);
+        }
+
+        .wp-timeline-embed .timeline-job-title {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: #000;
+            white-space: nowrap;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-job-title {
+                color: #fff;
+            }
+        }
+
+        .wp-timeline-embed .timeline-year {
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 8px;
+            white-space: nowrap;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-year {
+                color: #999;
+            }
+        }
+
+        .wp-timeline-embed .timeline-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            max-width: calc(100vw - 40px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999999;
+            border: 1px solid #e0e0e0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-content {
+                background: #2a2a2a;
+                border-color: #444;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        .wp-timeline-embed .timeline-item:hover .timeline-content {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10000 !important;
+        }
+
+        .wp-timeline-embed .timeline-date {
+            color: #000;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-date {
+                color: #fff;
+            }
+        }
+
+        .wp-timeline-embed .timeline-title-item {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .wp-timeline-embed .timeline-description {
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-description {
+                color: #ccc;
+            }
+        }
+
+        .wp-timeline-embed .timeline-description strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-description strong {
+                color: #fff;
+            }
+        }
+
+        .wp-timeline-embed .timeline-description ul {
+            margin: 8px 0 0 16px;
+            padding: 0;
+        }
+
+        .wp-timeline-embed .timeline-description li {
+            margin: 4px 0;
+        }
+
+        .wp-timeline-embed .timeline-nav {
+            position: absolute;
+            top: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateY(-50%);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-nav {
+                background: rgba(42, 42, 42, 0.9);
+                border-color: #555;
+                color: #fff;
+            }
+        }
+
+        .wp-timeline-embed .timeline-nav:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .wp-timeline-embed .timeline-nav:hover {
+                background: rgba(42, 42, 42, 1);
+            }
+        }
+
+        .wp-timeline-embed .timeline-nav.show {
+            opacity: 0.7;
+        }
+
+        .wp-timeline-embed .timeline-nav-left {
+            left: 10px;
+        }
+
+        .wp-timeline-embed .timeline-nav-right {
+            right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .wp-timeline-embed .timeline-item {
+                margin: 0 60px;
+                min-width: 80px;
+            }
+
+            .wp-timeline-embed .timeline-content {
+                width: 240px;
+                padding: 14px;
+            }
+
+            .wp-timeline-embed .timeline-job-title {
+                font-size: 0.8em;
+            }
+
+            .wp-timeline-embed .timeline-year {
+                font-size: 0.7em;
+            }
+
+            .wp-timeline-embed .timeline-date {
+                font-size: 0.8em;
+            }
+
+            .wp-timeline-embed .timeline-title-item {
+                font-size: 1em;
+            }
+
+            .wp-timeline-embed .timeline-description {
+                font-size: 0.8em;
+            }
+
+            .wp-timeline-embed .timeline-nav {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+        }
+    </style>
+
+    <div class="timeline-wrapper">
+        <div class="timeline-nav timeline-nav-left" id="nav-left">&lt;</div>
+        <div class="timeline-nav timeline-nav-right" id="nav-right">&gt;</div>
+
+        <div class="timeline" id="wp-timeline-123">
+            <div class="timeline-item">
+                <div class="timeline-job-title">Marketing Student</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2016-2019</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2016 - 2019</div>
+                    <div class="timeline-title-item">Marketing Student</div>
+                    <div class="timeline-description">
+                        <strong>Zayed University - Abu Dhabi</strong>
+                        <ul>
+                            <li>
+                                Digital marketing and social media strategies
+                            </li>
+                            <li>Consumer behavior analysis</li>
+                            <li>Brand management and market research</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-job-title">Design Student</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2021-2023</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2021 - 2023</div>
+                    <div class="timeline-title-item">Design Student</div>
+                    <div class="timeline-description">
+                        <strong>Edinburgh College of Art</strong>
+                        <ul>
+                            <li>Visual design and user interface principles</li>
+                            <li>Creative problem-solving methodologies</li>
+                            <li>Design thinking and prototyping</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-job-title">Edinburgh Bootcamp</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2024</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2024</div>
+                    <div class="timeline-title-item">
+                        Software Development Bootcamp
+                    </div>
+                    <div class="timeline-description">
+                        <strong>CodeClan Edinburgh</strong>
+                        <ul>
+                            <li>Full-stack web development</li>
+                            <li>JavaScript, Python, and React</li>
+                            <li>Agile development methodologies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-job-title">Python Learning</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2024</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2024</div>
+                    <div class="timeline-title-item">
+                        100 Days of Code in Python
+                    </div>
+                    <div class="timeline-description">
+                        <strong>Professional Development</strong>
+                        <ul>
+                            <li>Python for automation and AI applications</li>
+                            <li>Daily coding practice and projects</li>
+                            <li>Building practical programming skills</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-job-title">Udemy Python</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2024-Present</div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2024 - Present</div>
+                    <div class="timeline-title-item">Master Python Course</div>
+                    <div class="timeline-description">
+                        <strong>Udemy - Complete Python Developer</strong>
+                        <ul>
+                            <li>Advanced Python programming</li>
+                            <li>Web development with Flask/Django</li>
+                            <li>Data science and machine learning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var timeline = document.getElementById("wp-timeline-123");
+            if (!timeline) return;
+
+            var wrapper = timeline.parentElement;
+            var items = timeline.querySelectorAll(".timeline-item");
+            var navLeft = document.getElementById("nav-left");
+            var navRight = document.getElementById("nav-right");
+
+            var isDragging = false;
+            var startX = 0;
+            var currentTransform = 0;
+            var initialTransform = 0;
+            var velocity = 0;
+            var lastTime = 0;
+            var lastX = 0;
+            var maxTransform = 0;
+            var minTransform = 0;
+
+            function calculateBounds() {
+                var wrapperWidth = wrapper.clientWidth;
+                var firstItem = timeline.firstElementChild;
+                var lastItem = timeline.lastElementChild;
+
+                if (!firstItem || !lastItem) return;
+
+                var firstPos = firstItem.offsetLeft;
+                var lastPos = lastItem.offsetLeft;
+
+                maxTransform = wrapperWidth / 2 - firstPos;
+                minTransform = wrapperWidth / 2 - lastPos;
+
+                if (minTransform > maxTransform) {
+                    minTransform = maxTransform;
+                }
+            }
+
+            function adjustPopupPositions() {
+                items.forEach(function (item, index) {
+                    var popup = item.querySelector(".timeline-content");
+                    var itemRect = item.getBoundingClientRect();
+                    var wrapperRect = wrapper.getBoundingClientRect();
+                    var windowWidth = window.innerWidth;
+                    var isMobile = windowWidth <= 768;
+                    var popupWidth = isMobile ? 240 : 280;
+
+                    // Calculate dot position relative to wrapper
+                    var itemCenterX =
+                        itemRect.left - wrapperRect.left + itemRect.width / 2;
+                    var wrapperWidth = wrapperRect.width;
+
+                    // Define middle section (middle 30% of wrapper)
+                    var middleStart = wrapperWidth * 0.35;
+                    var middleEnd = wrapperWidth * 0.65;
+
+                    // Reset positioning to CSS defaults
+                    popup.style.position = "absolute";
+                    popup.style.top = "50%";
+
+                    if (
+                        itemCenterX >= middleStart &&
+                        itemCenterX <= middleEnd
+                    ) {
+                        // Middle section - center popup (use CSS default)
+                        popup.style.left = "50%";
+                        popup.style.right = "auto";
+                        popup.style.transform =
+                            "translateX(-50%) translateY(-50%)";
+                    } else if (itemCenterX < middleStart) {
+                        // Left edge - align 50% to center
+                        popup.style.left =
+                            windowWidth * 0.5 - popupWidth / 2 + "px";
+                        popup.style.right = "auto";
+                        popup.style.transform = "translateY(-50%)";
+                    } else {
+                        // Right edge - align 50% to center
+                        popup.style.left =
+                            windowWidth * 0.5 - popupWidth / 2 + "px";
+                        popup.style.right = "auto";
+                        popup.style.transform = "translateY(-50%)";
+                    }
+
+                    // Highest z-index for all popups
+                    popup.style.zIndex = "999999";
+                });
+            }
+
+            function managePopupOverlaps() {
+                var visiblePopups = [];
+                var hoveredItem = null;
+
+                // Find hovered item and collect visible popups
+                items.forEach(function (item) {
+                    var popup = item.querySelector(".timeline-content");
+                    if (item.matches(":hover")) {
+                        hoveredItem = item;
+                    }
+                    if (
+                        window.getComputedStyle(popup).visibility ===
+                            "visible" &&
+                        window.getComputedStyle(popup).opacity !== "0"
+                    ) {
+                        visiblePopups.push({ item: item, popup: popup });
+                    }
+                });
+
+                if (hoveredItem && visiblePopups.length > 1) {
+                    var hoveredPopup =
+                        hoveredItem.querySelector(".timeline-content");
+                    var hoveredRect = hoveredPopup.getBoundingClientRect();
+                    var buffer = 20; // Add buffer zone for overlap detection
+
+                    visiblePopups.forEach(function (popupData) {
+                        if (popupData.item !== hoveredItem) {
+                            var popup = popupData.popup;
+                            var popupRect = popup.getBoundingClientRect();
+
+                            // Check for overlap with buffer zone
+                            var overlaps = !(
+                                hoveredRect.right + buffer < popupRect.left ||
+                                hoveredRect.left - buffer > popupRect.right ||
+                                hoveredRect.bottom + buffer < popupRect.top ||
+                                hoveredRect.top - buffer > popupRect.bottom
+                            );
+
+                            if (overlaps) {
+                                popup.style.opacity = "0.05";
+                                popup.style.pointerEvents = "none";
+                                popup.style.transition = "opacity 0.15s ease";
+                            } else {
+                                popup.style.opacity = "";
+                                popup.style.pointerEvents = "";
+                            }
+                        }
+                    });
+                } else {
+                    // Reset all when no hover
+                    items.forEach(function (item) {
+                        var popup = item.querySelector(".timeline-content");
+                        popup.style.opacity = "";
+                        popup.style.pointerEvents = "";
+                    });
+                }
+            }
+
+            function setTransform(transform) {
+                var bounded = Math.max(
+                    minTransform,
+                    Math.min(maxTransform, transform),
+                );
+                currentTransform = bounded;
+                timeline.style.transform = "translateX(" + bounded + "px)";
+                updateNavigationButtons();
+                adjustPopupPositions();
+                managePopupOverlaps();
+            }
+
+            function updateNavigationButtons() {
+                if (currentTransform >= maxTransform) {
+                    navLeft.classList.remove("show");
+                } else {
+                    navLeft.classList.add("show");
+                }
+
+                if (currentTransform <= minTransform) {
+                    navRight.classList.remove("show");
+                } else {
+                    navRight.classList.add("show");
+                }
+            }
+
+            function startTouch(clientX) {
+                isDragging = true;
+                startX = clientX;
+                initialTransform = currentTransform;
+                velocity = 0;
+                lastTime = Date.now();
+                wrapper.style.cursor = "grabbing";
+            }
+
+            function moveTouch(clientX) {
+                if (!isDragging) return;
+
+                var deltaX = clientX - startX;
+                var newTransform = initialTransform + deltaX;
+                var now = Date.now();
+                var timeDelta = now - lastTime;
+
+                if (timeDelta > 0) {
+                    velocity = (clientX - lastX) / timeDelta;
+                }
+
+                lastX = clientX;
+                lastTime = now;
+                setTransform(newTransform);
+            }
+
+            function endTouch() {
+                if (!isDragging) return;
+
+                isDragging = false;
+                wrapper.style.cursor = "grab";
+
+                if (Math.abs(velocity) > 0.1) {
+                    applyMomentum();
+                }
+            }
+
+            function applyMomentum() {
+                function animate() {
+                    velocity *= 0.95;
+                    var proposed = currentTransform + velocity * 16;
+
+                    if (proposed >= maxTransform || proposed <= minTransform) {
+                        velocity = 0;
+                    }
+
+                    if (Math.abs(velocity) < 0.01) return;
+
+                    setTransform(currentTransform + velocity * 16);
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+
+            function scrollTimeline(direction) {
+                var scrollAmount = 300;
+                var newTransform;
+
+                if (direction === "left") {
+                    newTransform = currentTransform + scrollAmount;
+                } else {
+                    newTransform = currentTransform - scrollAmount;
+                }
+
+                newTransform = Math.max(
+                    minTransform,
+                    Math.min(maxTransform, newTransform),
+                );
+                animateToTransform(newTransform);
+            }
+
+            function animateToTransform(targetTransform) {
+                var startTransform = currentTransform;
+                var distance = targetTransform - startTransform;
+                var duration = 300;
+                var startTime = Date.now();
+
+                function animate() {
+                    var elapsed = Date.now() - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
+                    var easeProgress = 1 - Math.pow(1 - progress, 3);
+                    var newTransform = startTransform + distance * easeProgress;
+
+                    setTransform(newTransform);
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                animate();
+            }
+
+            // Simple popup management
+            items.forEach(function (item, index) {
+                var popup = item.querySelector(".timeline-content");
+
+                item.addEventListener("mouseenter", function () {
+                    popup.style.zIndex = "999999";
+                    adjustPopupPositions();
+                    managePopupOverlaps();
+                });
+
+                item.addEventListener("mouseleave", function () {
+                    popup.style.zIndex = "999999";
+                    // Reset popup opacities
+                    setTimeout(function () {
+                        items.forEach(function (resetItem) {
+                            var resetPopup =
+                                resetItem.querySelector(".timeline-content");
+                            resetPopup.style.opacity = "";
+                            resetPopup.style.pointerEvents = "";
+                        });
+                    }, 100);
+                });
+            });
+
+            // Touch events
+            wrapper.addEventListener("touchstart", function (e) {
+                startTouch(e.touches[0].clientX);
+            });
+
+            wrapper.addEventListener("touchmove", function (e) {
+                e.preventDefault();
+                moveTouch(e.touches[0].clientX);
+            });
+
+            wrapper.addEventListener("touchend", endTouch);
+
+            // Mouse events
+            wrapper.addEventListener("mousedown", function (e) {
+                e.preventDefault();
+                startTouch(e.clientX);
+            });
+
+            document.addEventListener("mousemove", function (e) {
+                if (isDragging) {
+                    moveTouch(e.clientX);
+                }
+            });
+
+            document.addEventListener("mouseup", endTouch);
+
+            // Navigation button events
+            navLeft.addEventListener("click", function () {
+                scrollTimeline("left");
+            });
+
+            navRight.addEventListener("click", function () {
+                scrollTimeline("right");
+            });
+
+            // Window resize handling
+            window.addEventListener("resize", function () {
+                calculateBounds();
+                adjustPopupPositions();
+                managePopupOverlaps();
+            });
+
+            // Initialize
+            calculateBounds();
+
+            setTimeout(function () {
+                for (var i = 0; i < items.length; i++) {
+                    (function (index) {
+                        setTimeout(function () {
+                            items[index].classList.add("visible");
+                        }, index * 100);
+                    })(i);
+                }
+                updateNavigationButtons();
+                adjustPopupPositions();
+                managePopupOverlaps();
+            }, 500);
+        })();
+    </script>
+</div>

@@ -1,0 +1,56 @@
+Sandor Kardos
+Designer, Developer, Digital Content Creator				Edinburgh, Scotland, UK
+email: kardos.sandor@gmail.com mobile: +44 7719 956135
+Professional Summary
+I am a pragmatic and adaptable designer with expertise in user-centred digital experiences, content creation, QA testing, and AI technologies. I have a real-life track record of delivering effective design solutions, building mobile-first responsive websites, and growing communities.
+Proficient in Photoshop, Illustrator, DaVinci Resolve, Canva, WordPress, Cypress, and Agile framework, I bring a blend of technical skill and creative thinking to every project.
+Links and Accounts:
+coding: github.com/sanyi8 
+design: behance.net/kardoss 
+professional progress, linktree: linktr.ee/kardoss
+python coding: kardos.glitch.me
+Technical Skills
+Adobe Creative Suite, Photoshop, Illustrator, Canva, HTML/CSS, JavaScript, Python, PHP, MySQL, WordPress, Cypress, Agile methodologies, Scrum, SEO, Social Media Management, Video Editing (DaVinci Resolve), Cloudflare, GitHub, Miro, Notion, Jira
+Work Experience
+Freelance Designer & Developer
+2015 – Present
+    • Managed, designed and developed multiple projects for responsive WordPress websites 
+    • Created comprehensive brand identities including logos and marketing materials.
+    • Improved client visibility through SEO techniques that increased traffic and conversions.
+    • Collaborated with clients to translate business requirements into effective digital solutions.
+Co-Founder, Web design & Digital Content Creator – Kryptoda / Kriptoaktiv (Non-Profit)
+2020 – 2023
+    • Built a community from scratch of 6,000+ YouTube subscribers and 1,500+ Facebook followers through free accessible education content in one year.
+    • Developed content strategies across YouTube, Facebook, Discord and other platforms.
+    • Enhanced website visibility by implementing SEO that drove 100% organic traffic.
+    • Produced high-quality video contents using open-source tools while maintaining legal compliance.
+
+Delivery Driver – UberEats / Deliveroo / Just Eat
+2015 – Present
+    • Maintained a 4.5+ star rating across platforms through exceptional customer service.
+    • Optimized delivery routes to ensure efficiency and timeliness.
+    • Established problem-solving skills managing logistics in time-sensitive environments.
+Education & Training
+Udemy - Master Python by building 100 projects in 100 days (2024-)
+Progressing in an intensive Python programming course, through project-based learning.
+So far, I have gained experience using Python applications like pyCharm, Replit. I have also learned to use documentation, Stackoverflow, data manipulation, debugging, OOP, turtle drawing, handle keypress events, work with slices and understand tuples.
+    • interested in Ai and automation, want to become a future proof ai ready professional
+Software Development Bootcamp – Edinburgh College (2024)
+    • Focused on front-end web development: HTML, CSS, JavaScript, Agile methods.
+    • Hands-on experience with QA testing using Cypress automation, Jira
+Udemy - Automated test, Cypress with Mocha, Cucumber frameworks (2024)
+(UI + Integration)
+    • Automation test with Cypress, Introduction to Jenkins, Github, Cucumber, API, Parsing CSV
+    • Beginning with QA testing using Cypress v14
+HND Visual Communication – Edinburgh College (2015 – 2017)
+    • Specialised in graphic design, branding, and digital media production, with a focus on creating user-centered solutions. Developed portfolio showcasing UX, prototyping, wireframing, typography, creative advertising, brand recognition and campaign building.
+Marketing & Advertising – Eventus Business School, Hungary (2002 – 2003)
+    • Learned about advertising techniques, and create marketing campaign
+Professional Development
+    • Glasgow Tech Fest (May 2024): Sessions on digital transformation and emerging tech trends.
+    • Manchester DTX Expo (Oct 2024): Workshops on UX/UI design and AI/Blockchain applications.
+Notable Projects
+Black Cab Design Concept - Final project for HNC Edinburgh College
+Updated exterior design of a British icon
+Kryptoda Digital Platform
+Developed a multi-channel content platform with consistent branding and 100% organic traffic, 6000+ subscribers in 1 year.

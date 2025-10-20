@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Professional CV for {{ data.name }} applying for {{ data.job }} at {{ data.company }}">
+  <title>{{ data.name }} for {{ data.job }} at {{ data.company }} | FunnelCV</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    /* Scroll snap for all devices */
+    .cv-container {
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    .cv-section {
+      scroll-snap-align: start;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 2rem 1rem;
+      position: relative;
+    }
+
+    /* Desktop adjustments */
+    @media (min-width: 769px) {
+      .cv-section {
+        padding: 3rem 2rem;
+        min-height: 100vh;
+      }
+
+      .cv-container {
+        scroll-padding-top: 2rem;
+      }
+    }
+
+    /* Mobile specific */
+    @media (max-width: 768px) {
+      .cv-section {
+        padding: 2rem 1rem;
+      }
+
+      .section-indicator {
+        position: fixed;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 1rem 0.5rem;
+        border-radius: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .indicator-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.4);
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+      }
+
+      .indicator-dot:hover {
+        background-color: rgba(255, 255, 255, 0.7);
+        transform: scale(1.1);
+      }
+
+      .indicator-dot.active {
+        background-color: #ef4444;
+        border-color: #ef4444;
+        transform: scale(1.3);
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+      }
+
+      .indicator-dot.completed {
+        background-color: #10b981;
+        border-color: #10b981;
+      }
+
+      /* Section titles on hover */
+      .indicator-dot::after {
+        content: attr(data-title);
+        position: absolute;
+        right: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .indicator-dot:hover::after {
+        opacity: 1;
+      }
+    }
+
+    /* Chatbot styles */
+    .chatbot-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1000;
+    }
+
+    .chatbot-bubble {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .chatbot-bubble:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .chat-window {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 320px;
+      height: 400px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 16px;
+      max-width: 80%;
+    }
+
+    .message.bot {
+      background: #f3f4f6;
+      margin-right: auto;
+    }
+
+    .message.user {
+      background: #3b82f6;
+      color: white;
+      margin-left: auto;
+    }
+
+    .preset-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .preset-btn {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    .preset-btn:hover {
+      background: #e5e7eb;
+      border-color: #9ca3af;
+    }
+  </style>
+
+  <!-- Open Graph tags for better social sharing -->
+  <meta property="og:title" content="{{ data.name }} for {{ data.job }} at {{ data.company }}">
+  <meta property="og:description" content="View my tailored CV for this position">
+  <meta property="og:type" content="profile">
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+  <!-- Section indicators for all devices -->
+  <div class="section-indicator">
+    <div class="indicator-dot active" data-section="0" data-title="Complete CV"></div>
+  </div>
+
+  <div class="cv-container max-w-2xl mx-auto p-4 md:p-6">
+    <!-- CV Container -->
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden cv-section" data-section="0">
+      <!-- Header -->
+      <div class="bg-red-600 text-white p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div class="mb-4 md:mb-0">
+            <h1 class="text-xl md:text-2xl font-bold">{{ data.name }}</h1>
+            <p class="text-white opacity-90 mt-1">
+              <span class="font-medium">{{ data.job }}</span> at {{ data.company }}
+            </p>
+          </div>
+          <div>
+            <a href="{{ url_for('index') }}" class="inline-block bg-white text-red-600 hover:bg-gray-100 rounded px-4 py-2 text-sm font-medium">
+              <i class="fas fa-pencil-alt mr-1"></i> Create Your Own
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6">
+        <!-- Contact Information -->
+        <div class="mb-6 bg-gray-50 p-4 rounded-lg border-l-4 border-red-500">
+          <h2 class="text-lg md:text-xl font-semibold mb-3">
+            <i class="fas fa-address-card text-gray-600 mr-2"></i>Contact Information
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <p class="text-gray-700"><i class="fas fa-user mr-2"></i>{{ data.name }}</p>
+              <p class="text-gray-700"><i class="fas fa-envelope mr-2"></i><a href="mailto:hello@sandorkardos.com" class="text-blue-600 hover:underline">hello@sandorkardos.com</a></p>
+              <p class="text-gray-700"><i class="fas fa-phone mr-2"></i>+44 7719 956135</p>
+            </div>
+            <div>
+              <p class="text-gray-700"><i class="fas fa-briefcase mr-2"></i>{{ data.job }} at {{ data.company }}</p>
+              <p class="text-gray-700"><i class="fas fa-globe mr-2"></i><a href="https://sandorkardos.com" class="text-blue-600 hover:underline" target="_blank">sandorkardos.com</a></p>
+              <p class="text-gray-700"><i class="fas fa-calendar mr-2"></i>Available immediately</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills Section -->
+        {% if data.skills and data.skills.strip() %}
+        <div class="mb-6 bg-gray-50 p-4 rounded-lg border-l-4 border-blue-500">
+          <h2 class="text-lg md:text-xl font-semibold mb-3">
+            <i class="fas fa-star text-gray-600 mr-2"></i>Key Skills
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <h3 class="font-medium text-gray-700 mb-2">Primary Skills</h3>
+              <div class="skills-container">
+                {% set skills_list = data.skills.split(',') %}
+                {% set half_index = (skills_list|length)//2 %}
+                {% set first_half = skills_list[:half_index + 1] %}
+                {% for skill in first_half if skill.strip() %}
+                  <span class="inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{{ skill.strip() }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-700 mb-2">Additional Skills</h3>
+              <div class="skills-container">
+                {% set skills_list = data.skills.split(',') %}
+                {% set half_index = (skills_list|length)//2 %}
+                {% set second_half = skills_list[half_index + 1:] %}
+                {% for skill in second_half if skill.strip() %}
+                  <span class="inline-block bg-gray-100 text-gray-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">{{ skill.strip() }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Video Introduction -->
+        {% if data.video %}
+        <div class="mb-6 bg-gray-50 p-4 rounded-lg border-l-4 border-green-500">
+          <h2 class="text-lg md:text-xl font-semibold mb-3">
+            <i class="fas fa-video text-gray-600 mr-2"></i>Video Introduction
+          </h2>
+          <div class="relative w-full rounded overflow-hidden shadow-sm" style="padding-bottom: 56.25%;">
+            <iframe 
+              src="{{ data.video }}" 
+              class="absolute top-0 left-0 w-full h-full border-0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen
+              title="Video introduction from {{ data.name }}"
+            ></iframe>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- CV Sections -->
+        <div class="mb-6 bg-gray-50 p-4 rounded-lg border-l-4 border-yellow-500">
+          <h2 class="text-lg md:text-xl font-semibold mb-3">
+            <i class="fas fa-file-alt text-gray-600 mr-2"></i>Curriculum Vitae
+          </h2>
+
+          <!-- Professional Summary Section -->
+          <div class="mb-5">
+            <h3 class="text-md font-semibold mb-2 text-gray-700 border-b pb-1">
+              <i class="fas fa-user-circle text-gray-600 mr-2"></i>Professional Summary
+            </h3>
+            <div class="prose max-w-none text-gray-700 leading-relaxed">
+              {{ data.summary|safe }}
+            </div>
+          </div>
+            <div class="prose max-w-none text-gray-700 leading-relaxed">
+              <div class="mb-3">
+                <p class="font-medium">{{ data.job }}</p>
+                <p class="text-sm text-gray-600">{{ data.company }} | 2023 - Present</p>
+                <ul class="mt-2">
+                  <li>Implemented and maintained key features relevant to the position</li>
+                  <li>Collaborated with cross-functional teams to achieve business objectives</li>
+                  <li>Utilized technical skills to deliver high-quality solutions</li>
+                </ul>
+              </div>
+              <!-- Work Experience -->
+              <div class="mb-3">
+                <p class="font-medium">Freelance Designer & Developer</p>
+                <p class="text-sm text-gray-600">Self-employed | 2015 – Present</p>
+                <ul class="mt-2">
+                  <li>Managed, designed and developed multiple projects for responsive WordPress websites</li>
+                  <li>Created comprehensive brand identities including logos and marketing materials</li>
+                  <li>Improved client visibility through SEO techniques</li>
+                  <li>Collaborated with clients to translate business requirements into effective digital solutions</li>
+                </ul>
+              </div>
+
+              <div class="mb-3">
+                <p class="font-medium">Co-Founder, Web design & Digital Content Creator</p>
+                <p class="text-sm text-gray-600">Kryptoda / Kriptoaktiv (Non-Profit) | 2020 – 2023</p>
+                <ul class="mt-2">
+                  <li>Built a community from scratch of 6,000+ YouTube subscribers and 1,500+ Facebook followers</li>
+                  <li>Developed content strategies across YouTube, Facebook, Discord and other platforms</li>
+                  <li>Enhanced website visibility by implementing SEO that drove 100% organic traffic</li>
+                  <li>Produced high-quality video contents using open-source tools</li>
+                </ul>
+              </div>
+
+              <!-- Engaging CTA -->
+              <div class="my-6 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                <p class="text-blue-700 font-medium">🚀 Ready to see how I keep learning and growing?</p>
+                <p class="text-blue-600 text-sm">Scroll down to explore my educational journey and continuous professional development!</p>
+                <div class="mt-2">
+                  <i class="fas fa-arrow-down text-blue-500 animate-bounce"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Education Section -->
+          <div class="mb-5">
+            <h3 class="text-md font-semibold mb-2 text-gray-700 border-b pb-1">
+              <i class="fas fa-graduation-cap text-gray-600 mr-2"></i>Education
+            </h3>
+            <div class="prose max-w-none text-gray-700 leading-relaxed">
+              <div class="mb-3">
+                <p class="font-medium">Master Python by building 100 projects in 100 days</p>
+                <p class="text-sm text-gray-600">Udemy | 2024 - Present</p>
+                <p class="mt-1">Intensive Python programming course with hands-on project experience</p>
+              </div>
+
+              <div class="mb-3">
+                <p class="font-medium">Software Development Bootcamp</p>
+                <p class="text-sm text-gray-600">Edinburgh College | 2024</p>
+                <p class="mt-1">Front-end web development, HTML, CSS, JavaScript, Agile methods</p>
+              </div>
+
+              <div class="mb-3">
+                <p class="font-medium">HND Visual Communication</p>
+                <p class="text-sm text-gray-600">Edinburgh College | 2015 – 2017</p>
+                <p class="mt-1">Specialized in graphic design, branding, and digital media production</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Share Section -->
+        <div class="mt-8 pt-6 border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-gray-600 mb-4 sm:mb-0">
+              <i class="fas fa-share-alt mr-1"></i> 
+              Share this CV:
+            </p>
+            <div class="flex items-center space-x-3">
+              <button 
+                onclick="copyToClipboard()" 
+                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition duration-300"
+              >
+                <i class="far fa-copy mr-1"></i> Copy Link
+              </button>
+              <a 
+                href="mailto:?subject={{ data.name }} for {{ data.job }} at {{ data.company }}&body=Check out my CV: {{ request.url }}" 
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition duration-300"
+              >
+                <i class="far fa-envelope mr-1"></i> Email
+              </a>
+              <a 
+                href="{{ url_for('download_cv', slug=slug) }}" 
+                class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded transition duration-300"
+              >
+                <i class="fas fa-download mr-1"></i> Download as Text
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 bg-gray-50 text-center text-gray-500 text-sm">
+          <p>Generated with <a href="{{ url_for('index') }}" class="text-red-600 hover:underline">FunnelCV</a> - AI-powered CV tailoring</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HR Feedback Chatbot -->
+    <div class="chatbot-container">
+      <div class="chatbot-bubble" onclick="toggleChat()">
+        <i class="fas fa-comments text-white text-xl"></i>
+      </div>
+
+      <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+          <h3 class="font-semibold">HR Quick Feedback</h3>
+          <p class="text-sm opacity-90">Help us improve CVs!</p>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot">
+            <p>Hi! I'm here to collect quick feedback about this CV. Your responses help candidates improve their applications.</p>
+
+            <div class="preset-options">
+              <button class="preset-btn" onclick="selectFeedback('interested', 'Strong candidate - Ready for interview')">
+                👍 Interested - Would like to interview
+              </button>
+              <button class="preset-btn" onclick="selectFeedback('maybe', 'Good potential but need clarification on experience')">
+                🤔 Maybe - Need more information
+              </button>
+              <button class="preset-btn" onclick="selectFeedback('not-match', 'Skills do not align with current requirements')">
+                ❌ Not a match - Skills don\'t align
+              </button>
+              <button class="preset-btn" onclick="selectFeedback('improve', 'Show more specific achievements and quantifiable results')">
+                💡 Has potential - Needs improvement
+              </button>
+              <button class="preset-btn" onclick="showDetailedFeedback()">
+                📝 Provide detailed feedback
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Notification (hidden by default) -->
+    <div id="copy-notification" class="fixed bottom-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md transform translate-y-20 opacity-0 transition-all duration-300">
+      <div class="flex">
+        <div class="py-1"><i class="fas fa-check-circle text-green-500"></i></div>
+        <div class="ml-3">
+          <p class="font-medium">Link copied to clipboard!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Analytics tracking
+    let pageStartTime = Date.now();
+    let sectionViewTimes = {};
+    let currentSection = 0;
+    let feedbackGiven = false;
+
+    // Initialize analytics
+    document.addEventListener('DOMContentLoaded', function() {
+      trackSectionView(0);
+      setupScrolling();
+    });
+
+    function trackSectionView(sectionIndex) {
+      if (sectionViewTimes[currentSection]) {
+        sectionViewTimes[currentSection] += Date.now() - pageStartTime;
+      } else {
+        sectionViewTimes[currentSection] = Date.now() - pageStartTime;
+      }
+      currentSection = sectionIndex;
+      pageStartTime = Date.now();
+
+      // Update indicators
+      document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === sectionIndex);
+      });
+    }
+
+    function setupScrolling() {
+      const container = document.querySelector('.cv-container');
+      const sections = document.querySelectorAll('.cv-section');
+      let isScrolling = false;
+
+      // Enhanced scroll detection for all devices
+      container.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          window.requestAnimationFrame(function() {
+            const scrollTop = container.scrollTop;
+            const containerHeight = container.clientHeight;
+
+            sections.forEach((section, index) => {
+              const rect = section.getBoundingClientRect();
+              const sectionTop = rect.top;
+              const sectionBottom = rect.bottom;
+
+              // Section is considered active when it's in the center viewport
+              if (sectionTop <= containerHeight * 0.3 && sectionBottom >= containerHeight * 0.3) {
+                trackSectionView(index);
+              }
+            });
+
+            isScrolling = false;
+          });
+          isScrolling = true;
+        }
+      });
+
+      // Indicator click navigation for all devices
+      document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+          sections[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+          trackSectionView(index);
+        });
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey || event.metaKey) return; // Ignore if modifier keys are pressed
+
+        switch(event.key) {
+          case 'ArrowDown':
+          case 'PageDown':
+          case ' ': // Spacebar
+            event.preventDefault();
+            navigateToSection(currentSection + 1);
+            break;
+          case 'ArrowUp':
+          case 'PageUp':
+            event.preventDefault();
+            navigateToSection(currentSection - 1);
+            break;
+          case 'Home':
+            event.preventDefault();
+            navigateToSection(0);
+            break;
+          case 'End':
+            event.preventDefault();
+            navigateToSection(sections.length - 1);
+            break;
+        }
+      });
+
+      // Touch/swipe navigation for mobile
+      let touchStartY = 0;
+      let touchEndY = 0;
+
+      container.addEventListener('touchstart', function(event) {
+        touchStartY = event.changedTouches[0].screenY;
+      });
+
+      container.addEventListener('touchend', function(event) {
+        touchEndY = event.changedTouches[0].screenY;
+        handleSwipe();
+      });
+
+      function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartY - touchEndY;
+
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            // Swipe up - next section
+            navigateToSection(currentSection + 1);
+          } else {
+            // Swipe down - previous section
+            navigateToSection(currentSection - 1);
+          }
+        }
+      }
+    }
+
+    function navigateToSection(sectionIndex) {
+      const sections = document.querySelectorAll('.cv-section');
+
+      if (sectionIndex < 0 || sectionIndex >= sections.length) return;
+
+      sections[sectionIndex].scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+
+      trackSectionView(sectionIndex);
+    }
+
+    function toggleChat() {
+      const chatWindow = document.getElementById('chatWindow');
+      const isVisible = chatWindow.style.display === 'flex';
+      chatWindow.style.display = isVisible ? 'none' : 'flex';
+
+      if (!isVisible) {
+        // Track chat opening
+        trackEvent('chat_opened', { timeOnPage: Date.now() - pageStartTime });
+      }
+    }
+
+    function selectFeedback(type, message) {
+      if (feedbackGiven) return;
+
+      const chatMessages = document.getElementById('chatMessages');
+
+      // Add user response
+      const userMessage = document.createElement('div');
+      userMessage.className = 'message user';
+      userMessage.innerHTML = `<p>${getEmojiForType(type)} ${type.replace('-', ' ')}</p>`;
+      chatMessages.appendChild(userMessage);
+
+      // Add bot follow-up
+      setTimeout(() => {
+        const botMessage = document.createElement('div');
+        botMessage.className = 'message bot';
+        botMessage.innerHTML = `
+          <p>Thank you for your feedback! This helps the candidate understand your perspective.</p>
+          <div class="preset-options">
+            <button class="preset-btn" onclick="askFollowUp('${type}')">
+              📊 Rate specific sections (1-5)
+            </button>
+            <button class="preset-btn" onclick="provideTips('${type}')">
+              💡 Give improvement tips
+            </button>
+            <button class="preset-btn" onclick="submitFeedback('${type}', '${message}')">
+              ✅ Submit feedback
+            </button>
+          </div>
+        `;
+        chatMessages.appendChild(botMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 1000);
+
+      feedbackGiven = true;
+    }
+
+    function askFollowUp(initialType) {
+      const chatMessages = document.getElementById('chatMessages');
+      const botMessage = document.createElement('div');
+      botMessage.className = 'message bot';
+      botMessage.innerHTML = `
+        <p>Rate these CV sections (1-5 stars):</p>
+        <div class="rating-section">
+          <div class="flex justify-between items-center mb-2">
+            <span>Skills Match:</span>
+            <div class="rating" data-section="skills">${generateStars()}</div>
+          </div>
+          <div class="flex justify-between items-center mb-2">
+            <span>Experience:</span>
+            <div class="rating" data-section="experience">${generateStars()}</div>
+          </div>
+          <div class="flex justify-between items-center mb-2">
+            <span>Presentation:</span>
+            <div class="rating" data-section="presentation">${generateStars()}</div>
+          </div>
+          <div class="flex justify-between items-center mb-2">
+            <span>Overall Fit:</span>
+            <div class="rating" data-section="fit">${generateStars()}</div>
+          </div>
+          <button class="preset-btn mt-3" onclick="submitDetailedRating('${initialType}')">
+            Submit Ratings
+          </button>
+        </div>
+      `;
+      chatMessages.appendChild(botMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Add click handlers for stars
+      setTimeout(() => {
+        setupStarRatings();
+      }, 100);
+    }
+
+    function generateStars() {
+      return '★★★★★'.split('').map((star, index) => 
+        `<span class="star" data-rating="${index + 1}">★</span>`
+      ).join('');
+    }
+
+    function setupStarRatings() {
+      document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.dataset.rating);
+          const ratingContainer = this.parentElement;
+          const stars = ratingContainer.querySelectorAll('.star');
+
+          stars.forEach((s, index) => {
+            s.style.color = index < rating ? '#fbbf24' : '#d1d5db';
+          });
+
+          ratingContainer.dataset.selectedRating = rating;
+        });
+      });
+    }
+
+    function showDetailedFeedback() {
+      const chatMessages = document.getElementById('chatMessages');
+      const botMessage = document.createElement('div');
+      botMessage.className = 'message bot';
+      botMessage.innerHTML = `
+        <p>Please provide detailed feedback:</p>
+        <div class="preset-options">
+          <button class="preset-btn" onclick="askFollowUp('detailed')">
+            📊 Rate all sections (1-5)
+          </button>
+          <button class="preset-btn" onclick="provideTips('detailed')">
+            💡 Give specific improvement tips
+          </button>
+          <button class="preset-btn" onclick="provideCustomFeedback()">
+            ✍️ Write custom feedback
+          </button>
+        </div>
+      `;
+      chatMessages.appendChild(botMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function submitDetailedRating(initialType) {
+      const ratings = {};
+      document.querySelectorAll('.rating').forEach(rating => {
+        const section = rating.dataset.section;
+        const selectedRating = rating.dataset.selectedRating;
+        if (selectedRating) {
+          ratings[section] = parseInt(selectedRating);
+        }
+      });
+
+      const analytics = {
+        feedback_type: initialType,
+        detailed_ratings: ratings,
+        time_spent: Date.now() - pageStartTime,
+        section_times: sectionViewTimes,
+        cv_slug: '{{ slug }}',
+        timestamp: new Date().toISOString()
+      };
+
+      fetch('/feedback/{{ slug }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(analytics)
+      }).then(() => {
+        showFeedbackSuccess();
+      });
+    }
+
+    function submitWithTips(type) {
+      const analytics = {
+        feedback_type: type,
+        improvement_tips: getTipsForType(type),
+        time_spent: Date.now() - pageStartTime,
+        section_times: sectionViewTimes,
+        cv_slug: '{{ slug }}',
+        timestamp: new Date().toISOString()
+      };
+
+      fetch('/feedback/{{ slug }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(analytics)
+      }).then(() => {
+        showFeedbackSuccess();
+      });
+    }
+
+    function provideTips(type) {
+      const chatMessages = document.getElementById('chatMessages');
+      const tips = getTipsForType(type);
+
+      const botMessage = document.createElement('div');
+      botMessage.className = 'message bot';
+      botMessage.innerHTML = `
+        <p>Here are some improvement suggestions:</p>
+        <ul class="list-disc pl-4 mt-2">
+          ${tips.map(tip => `<li class="mb-1">${tip}</li>`).join('')}
+        </ul>
+        <button class="preset-btn mt-3" onclick="submitWithTips('${type}')">
+          Send these tips to candidate
+        </button>
+      `;
+      chatMessages.appendChild(botMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getTipsForType(type) {
+      const tipsByType = {
+        'interested': [
+          'Strong CV overall - looking forward to discussing your experience',
+          'Your skills alignment is excellent for this role',
+          'Consider adding more quantifiable achievements'
+        ],
+        'maybe': [
+          'Add more specific examples of your achievements',
+          'Clarify your experience with key technologies we use',
+          'Include metrics and numbers where possible'
+        ],
+        'not-match': [
+          'Focus on skills more relevant to the target role',
+          'Consider highlighting transferable skills',
+          'Research the company and role requirements more deeply'
+        ],
+        'improve': [
+          'Use action verbs to start bullet points',
+          'Quantify your achievements with numbers and percentages',
+          'Tailor your CV more specifically to this role',
+          'Add more recent and relevant projects'
+        ]
+      };
+      return tipsByType[type] || ['Keep improving and tailoring your applications'];
+    }
+
+    function getEmojiForType(type) {
+      const emojis = {
+        'interested': '👍',
+        'maybe': '🤔',
+        'not-match': '❌',
+        'improve': '💡'
+      };
+      return emojis[type] || '📝';
+    }
+
+    function submitFeedback(type, message) {
+      const analytics = {
+        feedback_type: type,
+        message: message,
+        time_spent: Date.now() - pageStartTime,
+        section_times: sectionViewTimes,
+        cv_slug: '{{ slug }}',
+        timestamp: new Date().toISOString()
+      };
+
+      // Send analytics to backend
+      fetch('/feedback/{{ slug }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(analytics)
+      }).then(() => {
+        showFeedbackSuccess();
+      });
+    }
+
+    function showFeedbackSuccess() {
+      const chatMessages = document.getElementById('chatMessages');
+      const botMessage = document.createElement('div');
+      botMessage.className = 'message bot';
+      botMessage.innerHTML = `
+        <p>✅ Feedback submitted! The candidate will receive your insights to help improve their future applications.</p>
+        <p class="text-sm mt-2 opacity-75">Thank you for helping candidates grow!</p>
+      `;
+      chatMessages.appendChild(botMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      setTimeout(() => {
+        document.getElementById('chatWindow').style.display = 'none';
+      }, 3000);
+    }
+
+    function trackEvent(event, data) {
+      // Analytics tracking for candidate insights
+      fetch('/analytics/{{ slug }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event: event,
+          data: data,
+          timestamp: new Date().toISOString()
+        })
+      });
+    }
+
+    function copyToClipboard() {
+      navigator.clipboard.writeText(window.location.href).then(function() {
+        const notification = document.getElementById('copy-notification');
+        notification.classList.remove('translate-y-20', 'opacity-0');
+        notification.classList.add('translate-y-0', 'opacity-100');
+
+        setTimeout(function() {
+          notification.classList.add('translate-y-20', 'opacity-0');
+          notification.classList.remove('translate-y-0', 'opacity-100');
+        }, 3000);
+      });
+    }
+
+    // Track page exit
+    window.addEventListener('beforeunload', function() {
+      trackEvent('page_exit', {
+        total_time: Date.now() - pageStartTime,
+        sections_viewed: Object.keys(sectionViewTimes),
+        feedback_given: feedbackGiven
+      });
+    });
+  </script>
+</body>
+</html>

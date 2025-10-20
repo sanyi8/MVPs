@@ -1,0 +1,609 @@
+<div class="wp-timeline-embed">
+<style>
+.wp-timeline-embed * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.wp-timeline-embed {
+    width: 100%;
+    margin: 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: transparent;
+    color: #111;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed {
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+    }
+}
+
+.wp-timeline-embed .timeline-wrapper {
+    position: relative;
+    overflow: hidden;
+    padding: 40px 0;
+    height: 600px;
+    touch-action: pan-x;
+    cursor: grab;
+}
+
+.wp-timeline-embed .timeline-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #d8ff88 10%, #d8ff88 90%, transparent 100%);
+    z-index: 1;
+}
+
+.wp-timeline-embed .timeline {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: transform 0.3s ease;
+    will-change: transform;
+    position: relative;
+    z-index: 2;
+}
+
+.wp-timeline-embed .timeline-item {
+    position: relative;
+    margin: 0 100px;
+    min-width: 120px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.wp-timeline-embed .timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.wp-timeline-embed .timeline-dot {
+    width: 16px;
+    height: 16px;
+    background: #d8ff88;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 3;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 4px rgba(216, 255, 136, 0.3);
+}
+
+.wp-timeline-embed .timeline-dot:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 8px rgba(216, 255, 136, 0.4);
+}
+
+.wp-timeline-embed .timeline-job-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+    color: #000;
+    white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-job-title {
+        color: #fff;
+    }
+}
+
+.wp-timeline-embed .timeline-year {
+    text-align: center;
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 8px;
+    white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-year {
+        color: #999;
+    }
+}
+
+.wp-timeline-embed .timeline-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    max-width: calc(100vw - 40px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 999999;
+    border: 1px solid #e0e0e0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-content {
+        background: #2a2a2a;
+        border-color: #444;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.wp-timeline-embed .timeline-item:hover .timeline-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+.wp-timeline-embed .timeline-date {
+    color: #000;
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-date {
+        color: #fff;
+    }
+}
+
+.wp-timeline-embed .timeline-title-item {
+    font-weight: 700;
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.wp-timeline-embed .timeline-description {
+    font-size: 0.9em;
+    line-height: 1.5;
+    color: #555;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-description {
+        color: #ccc;
+    }
+}
+
+.wp-timeline-embed .timeline-description strong {
+    color: #333;
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-description strong {
+        color: #fff;
+    }
+}
+
+.wp-timeline-embed .timeline-description ul {
+    margin: 8px 0 0 16px;
+    padding: 0;
+}
+
+.wp-timeline-embed .timeline-description li {
+    margin: 4px 0;
+}
+
+.wp-timeline-embed .timeline-nav {
+    position: absolute;
+    top: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    transform: translateY(-50%);
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-nav {
+        background: rgba(42, 42, 42, 0.9);
+        border-color: #555;
+        color: #fff;
+    }
+}
+
+.wp-timeline-embed .timeline-nav:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    .wp-timeline-embed .timeline-nav:hover {
+        background: rgba(42, 42, 42, 1);
+    }
+}
+
+.wp-timeline-embed .timeline-nav.show {
+    opacity: 0.7;
+}
+
+.wp-timeline-embed .timeline-nav-left {
+    left: 10px;
+}
+
+.wp-timeline-embed .timeline-nav-right {
+    right: 10px;
+}
+
+@media (max-width: 768px) {
+    .wp-timeline-embed .timeline-item {
+        margin: 0 60px;
+        min-width: 80px;
+    }
+    
+    .wp-timeline-embed .timeline-content {
+        width: 240px;
+        padding: 14px;
+    }
+    
+    .wp-timeline-embed .timeline-job-title {
+        font-size: 0.8em;
+    }
+    
+    .wp-timeline-embed .timeline-year {
+        font-size: 0.7em;
+    }
+    
+    .wp-timeline-embed .timeline-date {
+        font-size: 0.8em;
+    }
+    
+    .wp-timeline-embed .timeline-title-item {
+        font-size: 1em;
+    }
+    
+    .wp-timeline-embed .timeline-description {
+        font-size: 0.8em;
+    }
+    
+    .wp-timeline-embed .timeline-nav {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+}
+</style>
+
+<div class="timeline-wrapper">
+    <div class="timeline-nav timeline-nav-left" id="nav-left">&lt;</div>
+    <div class="timeline-nav timeline-nav-right" id="nav-right">&gt;</div>
+    
+    <div class="timeline" id="wp-timeline-123">
+        <div class="timeline-item">
+            <div class="timeline-job-title">Marketing Studies</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2002-2003</div>
+            <div class="timeline-content">
+                <div class="timeline-date">2002 - 2003</div>
+                <div class="timeline-title-item">Marketing & Advertising</div>
+                <div class="timeline-description">
+                    <strong>Eventus Business School, Hungary</strong>
+                    <ul>
+                        <li>Marketing fundamentals and advertising strategies</li>
+                        <li>Business communication and brand management</li>
+                        <li>Consumer behavior and market analysis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-job-title">Freelance Designer</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2015-Present</div>
+            <div class="timeline-content">
+                <div class="timeline-date">2015 - Present</div>
+                <div class="timeline-title-item">Freelance Designer & Developer</div>
+                <div class="timeline-description">
+                    <strong>Independent Practice</strong>
+                    <ul>
+                        <li>Responsive WordPress websites with SEO optimization</li>
+                        <li>Brand identities including logos and marketing materials</li>
+                        <li>Client collaboration translating business requirements to digital solutions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-job-title">Visual Communication</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2015-2017</div>
+            <div class="timeline-content">
+                <div class="timeline-date">2015 - 2017</div>
+                <div class="timeline-title-item">HND Visual Communication</div>
+                <div class="timeline-description">
+                    <strong>Edinburgh College</strong>
+                    <ul>
+                        <li>Graphic design and branding specialization</li>
+                        <li>Web design and digital media production</li>
+                        <li>Portfolio development with industry projects</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-job-title">Kryptoda Co-Founder</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2020-2023</div>
+            <div class="timeline-content">
+                <div class="timeline-date">2020 - 2023</div>
+                <div class="timeline-title-item">Co-Founder & Digital Content Creator</div>
+                <div class="timeline-description">
+                    <strong>Kryptoda / Kriptoaktiv (Non-Profit)</strong>
+                    <ul>
+                        <li>Built 6,000+ YouTube subscribers and 1,500+ Facebook followers</li>
+                        <li>Developed content strategies across multiple platforms</li>
+                        <li>Achieved 100% organic traffic through SEO techniques</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-job-title">Software Development</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2024</div>
+            <div class="timeline-content">
+                <div class="timeline-date">2024</div>
+                <div class="timeline-title-item">Software Development Bootcamp</div>
+                <div class="timeline-description">
+                    <strong>Edinburgh College</strong>
+                    <ul>
+                        <li>Front-end web development: HTML, CSS, JavaScript</li>
+                        <li>QA testing using Cypress framework</li>
+                        <li>Hands-on experience with modern development practices</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-item">
+            <div class="timeline-job-title">Python Development</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2024-Present</div>
+            <div class="timeline-content">
+                <div class="timeline-date">2024 - Present</div>
+                <div class="timeline-title-item">100 Days of Code in Python</div>
+                <div class="timeline-description">
+                    <strong>Professional Development</strong>
+                    <ul>
+                        <li>Python for automation and AI applications</li>
+                        <li>Daily coding practice and project building</li>
+                        <li>Focus on practical programming skills</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    var timeline = document.getElementById('wp-timeline-123');
+    if (!timeline) return;
+    
+    var wrapper = timeline.parentElement;
+    var items = timeline.querySelectorAll('.timeline-item');
+    var navLeft = document.getElementById('nav-left');
+    var navRight = document.getElementById('nav-right');
+    
+    var isDragging = false;
+    var startX = 0;
+    var currentTransform = 0;
+    var initialTransform = 0;
+    var velocity = 0;
+    var lastTime = 0;
+    var lastX = 0;
+    var maxTransform = 0;
+    var minTransform = 0;
+
+    function calculateBounds() {
+        var wrapperWidth = wrapper.clientWidth;
+        var firstItem = timeline.firstElementChild;
+        var lastItem = timeline.lastElementChild;
+        
+        if (!firstItem || !lastItem) return;
+        
+        var firstPos = firstItem.offsetLeft;
+        var lastPos = lastItem.offsetLeft;
+        
+        maxTransform = (wrapperWidth / 2) - firstPos;
+        minTransform = (wrapperWidth / 2) - lastPos;
+        
+        if (minTransform > maxTransform) {
+            minTransform = maxTransform;
+        }
+    }
+
+    function setTransform(transform) {
+        var bounded = Math.max(minTransform, Math.min(maxTransform, transform));
+        currentTransform = bounded;
+        timeline.style.transform = 'translateX(' + bounded + 'px)';
+        updateNavigationButtons();
+    }
+
+    function updateNavigationButtons() {
+        if (currentTransform >= maxTransform) {
+            navLeft.classList.remove('show');
+        } else {
+            navLeft.classList.add('show');
+        }
+        
+        if (currentTransform <= minTransform) {
+            navRight.classList.remove('show');
+        } else {
+            navRight.classList.add('show');
+        }
+    }
+
+    function startTouch(clientX) {
+        isDragging = true;
+        startX = clientX;
+        initialTransform = currentTransform;
+        velocity = 0;
+        lastTime = Date.now();
+        wrapper.style.cursor = 'grabbing';
+    }
+
+    function moveTouch(clientX) {
+        if (!isDragging) return;
+        
+        var deltaX = clientX - startX;
+        var newTransform = initialTransform + deltaX;
+        var now = Date.now();
+        var timeDelta = now - lastTime;
+        
+        if (timeDelta > 0) {
+            velocity = (clientX - lastX) / timeDelta;
+        }
+        
+        lastX = clientX;
+        lastTime = now;
+        setTransform(newTransform);
+    }
+
+    function endTouch() {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        wrapper.style.cursor = 'grab';
+        
+        if (Math.abs(velocity) > 0.1) {
+            applyMomentum();
+        }
+    }
+
+    function applyMomentum() {
+        function animate() {
+            velocity *= 0.95;
+            var proposed = currentTransform + velocity * 16;
+            
+            if (proposed >= maxTransform || proposed <= minTransform) {
+                velocity = 0;
+            }
+            
+            if (Math.abs(velocity) < 0.01) return;
+            
+            setTransform(currentTransform + velocity * 16);
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+    function scrollTimeline(direction) {
+        var scrollAmount = 300;
+        var newTransform;
+        
+        if (direction === 'left') {
+            newTransform = currentTransform + scrollAmount;
+        } else {
+            newTransform = currentTransform - scrollAmount;
+        }
+        
+        newTransform = Math.max(minTransform, Math.min(maxTransform, newTransform));
+        animateToTransform(newTransform);
+    }
+
+    function animateToTransform(targetTransform) {
+        var startTransform = currentTransform;
+        var distance = targetTransform - startTransform;
+        var duration = 300;
+        var startTime = Date.now();
+
+        function animate() {
+            var elapsed = Date.now() - startTime;
+            var progress = Math.min(elapsed / duration, 1);
+            var easeProgress = 1 - Math.pow(1 - progress, 3);
+            var newTransform = startTransform + distance * easeProgress;
+            
+            setTransform(newTransform);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        }
+        animate();
+    }
+
+    // Touch events
+    wrapper.addEventListener('touchstart', function(e) {
+        startTouch(e.touches[0].clientX);
+    });
+
+    wrapper.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        moveTouch(e.touches[0].clientX);
+    });
+
+    wrapper.addEventListener('touchend', endTouch);
+
+    // Mouse events
+    wrapper.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        startTouch(e.clientX);
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+            moveTouch(e.clientX);
+        }
+    });
+
+    document.addEventListener('mouseup', endTouch);
+
+    // Navigation button events
+    navLeft.addEventListener('click', function() {
+        scrollTimeline('left');
+    });
+
+    navRight.addEventListener('click', function() {
+        scrollTimeline('right');
+    });
+
+    // Window resize handling
+    window.addEventListener('resize', function() {
+        calculateBounds();
+    });
+
+    // Initialize
+    calculateBounds();
+    
+    setTimeout(function() {
+        for (var i = 0; i < items.length; i++) {
+            (function(index) {
+                setTimeout(function() {
+                    items[index].classList.add('visible');
+                }, index * 100);
+            })(i);
+        }
+        updateNavigationButtons();
+    }, 500);
+})();
+</script>
+</div>
