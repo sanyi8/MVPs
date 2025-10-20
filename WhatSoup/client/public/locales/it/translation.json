@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "WhatSoup?",
+    "powered_by": "di Sandor Kardos",
+    "tagline": "Scopri deliziose ricette di zuppe con ingredienti che hai già!"
+  },
+  "form": {
+    "ingredients_placeholder": "Inserisci ingredienti (separati da virgole)",
+    "examples": "Esempi:",
+    "generate_button": "Genera"
+  },
+  "filters": {
+    "time": "Tempo di Cottura",
+    "cuisine": "Cucina",
+    "all": "Tutto",
+    "time_30min": "fino a 30min",
+    "time_45min": "45min",
+    "time_1hr": "1ora",
+    "time_1hr_plus": "1ora+"
+  },
+  "recipe": {
+    "ingredients": "Ingredienti:",
+    "instructions": "Istruzioni:",
+    "notes": "Note dello Chef:",
+    "difficulty": "Difficoltà",
+    "cooking_time": "Tempo di Cottura",
+    "added_to_favorites": "Aggiunto ai preferiti",
+    "removed_from_favorites": "Rimosso dai preferiti",
+    "recipe_saved": "Ricetta salvata nei tuoi preferiti",
+    "recipe_removed": "Ricetta rimossa dai tuoi preferiti",
+    "delete_confirm": "Sei sicuro di voler eliminare questa ricetta?",
+    "delete_success": "Ricetta eliminata con successo",
+    "source": "Fonte:"
+  },
+  "cuisines": {
+    "asian": "Asiatica",
+    "mediterranean": "Mediterranea",
+    "european": "Europea",
+    "american": "Americana",
+    "african": "Africana",
+    "middle_eastern": "Mediorientale",
+    "latin_american": "Latinoamericana",
+    "indian": "Indiana",
+    "thai": "Tailandese",
+    "vietnamese": "Vietnamita",
+    "japanese": "Giapponese",
+    "korean": "Coreana",
+    "chinese": "Cinese",
+    "mexican": "Messicana",
+    "italian": "Italiana",
+    "french": "Francese",
+    "spanish": "Spagnola",
+    "greek": "Greca",
+    "turkish": "Turca",
+    "moroccan": "Marocchina",
+    "russian": "Russa",
+    "german": "Tedesca",
+    "british": "Britannica",
+    "hungarian": "Ungherese"
+  }
+}

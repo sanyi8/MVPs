@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "WhatSoup?",
+    "powered_by": "creat de Sandor Kardos",
+    "tagline": "Descoperă rețete delicioase de supă cu ingrediente pe care le ai deja!"
+  },
+  "form": {
+    "ingredients_placeholder": "Introduceți ingredientele (separate prin virgulă)",
+    "examples": "Exemple:",
+    "generate_button": "Generează"
+  },
+  "filters": {
+    "time": "Timp de Gătit",
+    "cuisine": "Bucătărie",
+    "all": "Toate",
+    "time_30min": "până la 30min",
+    "time_45min": "45min",
+    "time_1hr": "1oră",
+    "time_1hr_plus": "1oră+"
+  },
+  "recipe": {
+    "ingredients": "Ingrediente:",
+    "instructions": "Instrucțiuni:",
+    "notes": "Notele Bucătarului:",
+    "difficulty": "Dificultate",
+    "cooking_time": "Timp de Gătit",
+    "added_to_favorites": "Adăugat la favorite",
+    "removed_from_favorites": "Eliminat din favorite",
+    "recipe_saved": "Rețetă salvată la favorite",
+    "recipe_removed": "Rețetă eliminată din favorite",
+    "delete_confirm": "Sigur doriți să ștergeți această rețetă?",
+    "delete_success": "Rețetă ștearsă cu succes",
+    "source": "Sursă:"
+  },
+  "cuisines": {
+    "asian": "Asiatică",
+    "mediterranean": "Mediteraneană",
+    "european": "Europeană",
+    "american": "Americană",
+    "african": "Africană",
+    "middle_eastern": "Orientul Mijlociu",
+    "latin_american": "Latino-Americană",
+    "indian": "Indiană",
+    "thai": "Thailandeză",
+    "vietnamese": "Vietnameză",
+    "japanese": "Japoneză",
+    "korean": "Coreeană",
+    "chinese": "Chineză",
+    "mexican": "Mexicană",
+    "italian": "Italiană",
+    "french": "Franceză",
+    "spanish": "Spaniolă",
+    "greek": "Grecească",
+    "turkish": "Turcească",
+    "moroccan": "Marocană",
+    "russian": "Rusească",
+    "german": "Germană",
+    "british": "Britanică",
+    "hungarian": "Ungurească"
+  }
+}

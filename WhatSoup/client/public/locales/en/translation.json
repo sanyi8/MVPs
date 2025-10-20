@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "WhatSoup?",
+    "powered_by": "powered by Sandor Kardos",
+    "tagline": "Discover delicious soup recipes with ingredients you already have!"
+  },
+  "form": {
+    "ingredients_placeholder": "Enter ingredients (comma separated)",
+    "examples": "Examples:",
+    "generate_button": "Generate"
+  },
+  "filters": {
+    "time": "Cooking Time",
+    "cuisine": "Cuisine",
+    "all": "All",
+    "time_30min": "up to 30min",
+    "time_45min": "45min",
+    "time_1hr": "1hr",
+    "time_1hr_plus": "1hr+"
+  },
+  "recipe": {
+    "ingredients": "Ingredients:",
+    "instructions": "Instructions:",
+    "notes": "Chef's Notes:",
+    "difficulty": "Difficulty",
+    "cooking_time": "Cooking Time",
+    "added_to_favorites": "Added to favorites",
+    "removed_from_favorites": "Removed from favorites",
+    "recipe_saved": "Recipe saved to your favorites",
+    "recipe_removed": "Recipe removed from your favorites",
+    "delete_confirm": "Are you sure you want to delete this recipe?",
+    "delete_success": "Recipe deleted successfully",
+    "source": "Source:"
+  },
+  "cuisines": {
+    "asian": "Asian",
+    "mediterranean": "Mediterranean",
+    "european": "European",
+    "american": "American",
+    "african": "African",
+    "middle_eastern": "Middle Eastern",
+    "latin_american": "Latin American",
+    "indian": "Indian",
+    "thai": "Thai",
+    "vietnamese": "Vietnamese",
+    "japanese": "Japanese",
+    "korean": "Korean",
+    "chinese": "Chinese",
+    "mexican": "Mexican",
+    "italian": "Italian",
+    "french": "French",
+    "spanish": "Spanish",
+    "greek": "Greek",
+    "turkish": "Turkish",
+    "moroccan": "Moroccan",
+    "russian": "Russian",
+    "german": "German",
+    "british": "British",
+    "hungarian": "Hungarian"
+  }
+}

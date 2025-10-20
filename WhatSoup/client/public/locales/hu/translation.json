@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "WhatSoup?",
+    "powered_by": "készítette Sandor Kardos",
+    "tagline": "Fedezz fel ízletes levesrecepteket olyan hozzávalókkal, amik már otthon vannak!"
+  },
+  "form": {
+    "ingredients_placeholder": "Add meg a hozzávalókat (vesszővel elválasztva)",
+    "examples": "Példák:",
+    "generate_button": "Generálás"
+  },
+  "filters": {
+    "time": "Főzési Idő",
+    "cuisine": "Konyha",
+    "all": "Mind",
+    "time_30min": "max. 30perc",
+    "time_45min": "45perc",
+    "time_1hr": "1óra",
+    "time_1hr_plus": "1óra+"
+  },
+  "recipe": {
+    "ingredients": "Hozzávalók:",
+    "instructions": "Elkészítés:",
+    "notes": "Séf Megjegyzése:",
+    "difficulty": "Nehézség",
+    "cooking_time": "Főzési Idő",
+    "added_to_favorites": "Hozzáadva a kedvencekhez",
+    "removed_from_favorites": "Eltávolítva a kedvencekből",
+    "recipe_saved": "Recept elmentve a kedvencekhez",
+    "recipe_removed": "Recept eltávolítva a kedvencekből",
+    "delete_confirm": "Biztosan törölni szeretnéd ezt a receptet?",
+    "delete_success": "Recept sikeresen törölve",
+    "source": "Forrás:"
+  },
+  "cuisines": {
+    "asian": "Ázsiai",
+    "mediterranean": "Mediterrán",
+    "european": "Európai",
+    "american": "Amerikai",
+    "african": "Afrikai",
+    "middle_eastern": "Közel-keleti",
+    "latin_american": "Latin-amerikai",
+    "indian": "Indiai",
+    "thai": "Thai",
+    "vietnamese": "Vietnámi",
+    "japanese": "Japán",
+    "korean": "Koreai",
+    "chinese": "Kínai",
+    "mexican": "Mexikói",
+    "italian": "Olasz",
+    "french": "Francia",
+    "spanish": "Spanyol",
+    "greek": "Görög",
+    "turkish": "Török",
+    "moroccan": "Marokkói",
+    "russian": "Orosz",
+    "german": "Német",
+    "british": "Brit",
+    "hungarian": "Magyar"
+  }
+}

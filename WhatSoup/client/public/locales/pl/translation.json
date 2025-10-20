@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "WhatSoup?",
+    "powered_by": "stworzone przez Sandor Kardos",
+    "tagline": "Odkryj pyszne przepisy na zupy ze składników, które już masz!"
+  },
+  "form": {
+    "ingredients_placeholder": "Wprowadź składniki (oddzielone przecinkami)",
+    "examples": "Przykłady:",
+    "generate_button": "Generuj"
+  },
+  "filters": {
+    "time": "Czas Gotowania",
+    "cuisine": "Kuchnia",
+    "all": "Wszystkie",
+    "time_30min": "do 30min",
+    "time_45min": "45min",
+    "time_1hr": "1godz",
+    "time_1hr_plus": "1godz+"
+  },
+  "recipe": {
+    "ingredients": "Składniki:",
+    "instructions": "Instrukcje:",
+    "notes": "Uwagi Szefa Kuchni:",
+    "difficulty": "Trudność",
+    "cooking_time": "Czas Gotowania",
+    "added_to_favorites": "Dodano do ulubionych",
+    "removed_from_favorites": "Usunięto z ulubionych",
+    "recipe_saved": "Przepis zapisany w ulubionych",
+    "recipe_removed": "Przepis usunięty z ulubionych",
+    "delete_confirm": "Czy na pewno chcesz usunąć ten przepis?",
+    "delete_success": "Przepis pomyślnie usunięty",
+    "source": "Źródło:"
+  },
+  "cuisines": {
+    "asian": "Azjatycka",
+    "mediterranean": "Śródziemnomorska",
+    "european": "Europejska",
+    "american": "Amerykańska",
+    "african": "Afrykańska",
+    "middle_eastern": "Bliskowschodnia",
+    "latin_american": "Latynoamerykańska",
+    "indian": "Indyjska",
+    "thai": "Tajska",
+    "vietnamese": "Wietnamska",
+    "japanese": "Japońska",
+    "korean": "Koreańska",
+    "chinese": "Chińska",
+    "mexican": "Meksykańska",
+    "italian": "Włoska",
+    "french": "Francuska",
+    "spanish": "Hiszpańska",
+    "greek": "Grecka",
+    "turkish": "Turecka",
+    "moroccan": "Marokańska",
+    "russian": "Rosyjska",
+    "german": "Niemiecka",
+    "british": "Brytyjska",
+    "hungarian": "Węgierska"
+  }
+}

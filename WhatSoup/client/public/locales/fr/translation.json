@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "WhatSoup?",
+    "powered_by": "par Sandor Kardos",
+    "tagline": "Découvrez de délicieuses recettes de soupe avec des ingrédients que vous avez déjà !"
+  },
+  "form": {
+    "ingredients_placeholder": "Entrez les ingrédients (séparés par des virgules)",
+    "examples": "Exemples:",
+    "generate_button": "Générer"
+  },
+  "filters": {
+    "time": "Temps de Cuisson",
+    "cuisine": "Cuisine",
+    "all": "Tout",
+    "time_30min": "jusqu'à 30min",
+    "time_45min": "45min",
+    "time_1hr": "1h",
+    "time_1hr_plus": "1h+"
+  },
+  "recipe": {
+    "ingredients": "Ingrédients:",
+    "instructions": "Instructions:",
+    "notes": "Notes du Chef:",
+    "difficulty": "Difficulté",
+    "cooking_time": "Temps de Cuisson",
+    "added_to_favorites": "Ajouté aux favoris",
+    "removed_from_favorites": "Retiré des favoris",
+    "recipe_saved": "Recette sauvegardée dans vos favoris",
+    "recipe_removed": "Recette retirée de vos favoris",
+    "delete_confirm": "Êtes-vous sûr de vouloir supprimer cette recette ?",
+    "delete_success": "Recette supprimée avec succès",
+    "source": "Source:"
+  },
+  "cuisines": {
+    "asian": "Asiatique",
+    "mediterranean": "Méditerranéenne",
+    "european": "Européenne",
+    "american": "Américaine",
+    "african": "Africaine",
+    "middle_eastern": "Moyen-orientale",
+    "latin_american": "Latino-américaine",
+    "indian": "Indienne",
+    "thai": "Thaïlandaise",
+    "vietnamese": "Vietnamienne",
+    "japanese": "Japonaise",
+    "korean": "Coréenne",
+    "chinese": "Chinoise",
+    "mexican": "Mexicaine",
+    "italian": "Italienne",
+    "french": "Française",
+    "spanish": "Espagnole",
+    "greek": "Grecque",
+    "turkish": "Turque",
+    "moroccan": "Marocaine",
+    "russian": "Russe",
+    "german": "Allemande",
+    "british": "Britannique",
+    "hungarian": "Hongroise"
+  }
+}

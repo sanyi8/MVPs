@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-[#f0ece1ff] text-[#2b2d42];
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
+
+@layer components {
+  .recipe-card {
+    @apply transition-all duration-300 hover:shadow-xl;
+  }
+  
+  .recipe-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .soup-header {
+    @apply font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#788931ff] to-[#cd8444ff];
+  }
+  
+  .footer-attribution {
+    @apply text-sm text-[#cd8444ff] hover:text-[#F95432] transition-colors;
+  }
+  
+  .favorite-active {
+    @apply text-[#F95432] !important;
+  }
+  
+  .favorite-button {
+    @apply h-8 w-8 rounded-full flex items-center justify-center;
+    @apply transition-all duration-200 hover:scale-110;
+    @apply bg-white shadow-md hover:shadow-lg;
+  }
+  
+  /* Base button style update */
+  .btn-primary {
+    @apply bg-[#e87f66] text-white hover:bg-[#f6d7aeff] hover:text-[#2b2d42] transition-colors;
+  }
+
+  /* Navigation styles */
+  .nav-link {
+    @apply text-black bg-[hsl(44deg_33.33%_91.18%)] transition-colors;
+  }
+
+  .nav-link.active {
+    @apply text-[hsl(var(--border))];
+  }
+
+  [role="tablist"] {
+    @apply bg-[hsl(44deg_33.33%_91.18%)] !important;
+  }
+
+  [role="tab"][data-state="active"] {
+    @apply bg-[hsl(10.46deg_91.55%_58.24%)] text-white !important;
+  }
+
+  [role="tab"][data-state="inactive"] {
+    @apply bg-[hsl(44deg_33.33%_91.18%)] text-black !important;
+  }
+
+  .recipe-count {
+    @apply text-black font-bold bg-white px-2 py-1 rounded-full inline-flex !important;
+  }
+}

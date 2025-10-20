@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "WhatSoup?",
+    "powered_by": "von Sandor Kardos",
+    "tagline": "Entdecke leckere Suppenrezepte mit Zutaten, die du bereits hast!"
+  },
+  "form": {
+    "ingredients_placeholder": "Zutaten eingeben (durch Komma getrennt)",
+    "examples": "Beispiele:",
+    "generate_button": "Generieren"
+  },
+  "filters": {
+    "time": "Kochzeit",
+    "cuisine": "Küche",
+    "all": "Alle",
+    "time_30min": "bis zu 30Min",
+    "time_45min": "45Min",
+    "time_1hr": "1Std",
+    "time_1hr_plus": "1Std+"
+  },
+  "recipe": {
+    "ingredients": "Zutaten:",
+    "instructions": "Anleitung:",
+    "notes": "Koch-Notizen:",
+    "difficulty": "Schwierigkeit",
+    "cooking_time": "Kochzeit",
+    "added_to_favorites": "Zu Favoriten hinzugefügt",
+    "removed_from_favorites": "Aus Favoriten entfernt",
+    "recipe_saved": "Rezept in Favoriten gespeichert",
+    "recipe_removed": "Rezept aus Favoriten entfernt",
+    "delete_confirm": "Möchten Sie dieses Rezept wirklich löschen?",
+    "delete_success": "Rezept erfolgreich gelöscht",
+    "source": "Quelle:"
+  },
+  "cuisines": {
+    "asian": "Asiatisch",
+    "mediterranean": "Mediterran",
+    "european": "Europäisch",
+    "american": "Amerikanisch",
+    "african": "Afrikanisch",
+    "middle_eastern": "Nahöstlich",
+    "latin_american": "Lateinamerikanisch",
+    "indian": "Indisch",
+    "thai": "Thailändisch",
+    "vietnamese": "Vietnamesisch",
+    "japanese": "Japanisch",
+    "korean": "Koreanisch",
+    "chinese": "Chinesisch",
+    "mexican": "Mexikanisch",
+    "italian": "Italienisch",
+    "french": "Französisch",
+    "spanish": "Spanisch",
+    "greek": "Griechisch",
+    "turkish": "Türkisch",
+    "moroccan": "Marokkanisch",
+    "russian": "Russisch",
+    "german": "Deutsch",
+    "british": "Britisch",
+    "hungarian": "Ungarisch"
+  }
+}
