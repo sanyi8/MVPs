@@ -1,0 +1,49 @@
+Here’s a prompt you can give to Replit’s AI Agent to fix the **"Invalid task data"** error related to the missing or incorrect `position` field, and ensure your **DoIt** app’s add and list functions work properly:
+
+---
+
+### Prompt to fix task add error and make DoIt MVP fully functional:
+
+---
+
+**Fix the React Native Expo DoIt app so that when adding a task:**
+
+- The task object includes a required numeric `position` property representing its order in the list.  
+- When a new task is added, assign it a `position` value that places it at the end of the active tasks list.  
+- Ensure the `position` field is updated correctly when tasks are reordered via drag-and-drop.  
+- Modify the add task function to validate input and include `position` before saving the task.  
+- Fix the list display so tasks are sorted by `position` ascending.  
+- Make sure the done and later buttons update the task lists and positions properly without errors.  
+- Confirm all confirmation dialogs work as expected and tasks move between active, done, and later states correctly.  
+- Use React state hooks for managing tasks and positions in memory.  
+- Provide a working example of the main components (MainScreen, AddModal, ListModal) with these fixes.
+
+Please generate the updated React Native code for this MVP app with these fixes applied and test that the add, list, done, and later features work without errors.
+
+---
+
+### Explanation for the fix:
+
+The error you got:
+
+```
+400: {"message":"Invalid task data","errors":[{"code":"invalid_type","expected":"number","received":"undefined","path":["position"],"message":"Required"}]}
+```
+
+means the backend or state expects every task to have a numeric `position` field (used for ordering), but your add function is not providing it when creating a new task.
+
+By assigning `position` as the last index (e.g., current max position + 1) when adding a task, and updating positions on reorder, you prevent this error.
+
+---
+
+If you want, I can generate the fixed React Native code for you now! Just ask.
+
+Források
+[1] Creating a React Native Mobile App with Replit Assistant and Expo https://www.newline.co/@kchan/creating-a-react-native-mobile-app-with-replit-assistant-and-expo--45270840
+[2] From idea to app with Replit and Expo https://expo.dev/blog/from-idea-to-app-with-replit-and-expo
+[3] Build an Expo app with Replit...and then edit the app from your phone https://www.reddit.com/r/reactnative/comments/1imzmzd/build_an_expo_app_with_replitand_then_edit_the/
+[4] Replit Reps Event: Getting Started with React App - YouTube https://www.youtube.com/watch?v=NvMXp3qavK4
+[5] Replit Agent: A Guide With Practical Examples - DataCamp https://www.datacamp.com/tutorial/replit-agent-ai-code-editor
+[6] How to Build a React App Using Replit: A Complete Guide https://slashdev.io/-how-to-build-a-react-app-using-replit-a-complete-guide
+[7] Build your first React Native app - Todo List Tutorial Part 1 - YouTube https://www.youtube.com/watch?v=0kL6nhutjQ8
+[8] Replit Tutorials https://www.rapidevelopers.com/replit-tutorials

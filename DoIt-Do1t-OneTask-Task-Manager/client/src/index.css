@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand Colors - Change these to update everywhere */
+  --brand-mint: #b1f2d6;
+  --brand-forest: #002e22;
+  --brand-emerald: #03d47c;
+  --brand-pine: #085239;
+
+  /* Light theme - using light brand colors with dark text */
+  --background: 154 71% 93%;
+  /* Light mint background */
+  --foreground: 154 100% 7%;
+  /* Dark forest text */
+  --muted: 154 71% 76%;
+  --muted-foreground: 154 100% 15%;
+  --popover: 154 71% 93%;
+  --popover-foreground: 154 100% 7%;
+  --card: 154 71% 93%;
+  --card-foreground: 154 100% 7%;
+  --border: 154 71% 76%;
+  --input: 154 71% 76%;
+  --primary: 163 97% 43%;
+  /* Emerald primary */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 154 71% 76%;
+  --secondary-foreground: 154 100% 7%;
+  --accent: 163 97% 43%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 163 97% 43%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Dark theme - using dark brand colors with light text */
+  --background: 154 100% 9%;
+  /* Dark forest background */
+  --foreground: 154 71% 93%;
+  /* Light mint text */
+  --muted: 154 100% 16%;
+  --muted-foreground: 154 71% 75%;
+  --popover: 154 100% 9%;
+  --popover-foreground: 154 71% 93%;
+  --card: 154 100% 9%;
+  --card-foreground: 154 71% 93%;
+  --border: 154 100% 16%;
+  --input: 154 100% 16%;
+  --primary: 163 97% 43%;
+  /* Emerald primary */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 154 100% 16%;
+  --secondary-foreground: 154 71% 93%;
+  --accent: 163 97% 43%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 163 97% 43%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Custom styles */
+.task-done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.btn-primary {
+  @apply bg-primary text-primary-foreground py-2 px-4 rounded-md font-semibold hover:opacity-90 transition-opacity;
+}
+
+.header {
+  @apply flex items-center justify-between p-4;
+}
+
+.logo {
+  @apply h-10;
+}
+
+.app-container {
+  @apply p-4;
+}
+
+/* Apply brand colors using variables */
+#screener {
+  background-color: var(--brand-mint);
+}
+
+#app {
+  background-color: var(--brand-mint);
+  color: var(--brand-forest);
+}
+
+.dark #screener {
+  background-color: var(--brand-dark-forest);
+}
+
+.dark #app {
+  background-color: var(--brand-forest);
+  color: var(--brand-mint);
+}

@@ -1,0 +1,11 @@
+
+node_modules
+dist
+.env
+*.local
+.replit
+replit.nix
+.config
+*.db
+*.sqlite
+.DS_Store
