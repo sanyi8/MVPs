@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Routing</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Debug Routing Test</h1>
+    
+    <div class="section">
+        <h2>Current Location Test</h2>
+        <p>Current URL: <span id="currentUrl"></span></p>
+        <p>Current Path: <span id="currentPath"></span></p>
+    </div>
+    
+    <div class="section">
+        <h2>Navigation Test</h2>
+        <button class="button" onclick="navigateTo('/')">Go to Home (/)</button>
+        <button class="button" onclick="navigateTo('/match')">Go to Match (/match)</button>
+        <button class="button" onclick="navigateTo('/daily')">Go to Daily (/daily)</button>
+        <button class="button" onclick="navigateTo('/settings')">Go to Settings (/settings)</button>
+    </div>
+    
+    <div class="section">
+        <h2>Route Detection</h2>
+        <p id="routeInfo">Loading...</p>
+    </div>
+    
+    <script>
+        function updateDisplay() {
+            document.getElementById('currentUrl').textContent = window.location.href;
+            document.getElementById('currentPath').textContent = window.location.pathname;
+            
+            const path = window.location.pathname;
+            let routeInfo = '';
+            
+            switch(path) {
+                case '/':
+                    routeInfo = 'Home Route - Should show Profile page';
+                    break;
+                case '/match':
+                    routeInfo = 'Match Route - Should show Match page';
+                    break;
+                case '/daily':
+                    routeInfo = 'Daily Route - Should show Daily page';
+                    break;
+                case '/settings':
+                    routeInfo = 'Settings Route - Should show Settings page';
+                    break;
+                default:
+                    routeInfo = 'Unknown Route - Should show 404 page';
+            }
+            
+            document.getElementById('routeInfo').textContent = routeInfo;
+        }
+        
+        function navigateTo(path) {
+            window.history.pushState({}, '', path);
+            updateDisplay();
+        }
+        
+        window.addEventListener('popstate', updateDisplay);
+        updateDisplay();
+    </script>
+</body>
+</html>
